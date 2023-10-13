@@ -1,8 +1,10 @@
 {
-    "duid": "your-duid",
-    "cpid": "your-cpid",
-    "env": "your-env",
+    "sdk_ver": "!!!NOT REQUIRED IN C SDK!!! 2.1",
+    "duid": "Your Device's name in https://avnet.iotconnect.io/device/1",
+    "cpid": "'CPID' from https://avnet.iotconnect.io/key-vault",
+    "env": "'Environment' from https://avnet.iotconnect.io/key-vault",
     "iotc_server_cert": "/etc/ssl/certs/DigiCert_Global_Root_G2.pem",
+    "sdk_id": "!!!NOT REQUIRED IN C SDK!!! 'SDK Identities -> Language: Python **, Version: 1.0' from https://avnet.iotconnect.io/key-vault",
     "auth": {
         "auth_type": "IOTC_AT_X509",
         "params": {
@@ -11,13 +13,11 @@
         }
     },
     "device": {
-        "name": "maaxboardt",
-        "commands": [
-            {
-                "name": "led",
-                "private_data": "/path/to/file"
-            }
-        ],
+        "offline_storage": {
+            "available_space_MB": 1,
+            "file_count": 1
+        },
+        "commands_list_path": "/usr/local/iotc/scripts/scripts_list",
         "attributes": [
             {
                 "name": "sensor1",

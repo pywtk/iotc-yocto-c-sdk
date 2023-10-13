@@ -10,6 +10,7 @@
 #include "cJSON.h"
 
 #undef COMMAND_FUNCTION_PTR_PARSING
+#define MAX_SCRIPT_NAME_LENGTH 64
 
 typedef enum file_read_mode {
     FMODE_ASCII = 0,
@@ -57,14 +58,20 @@ typedef struct commands {
 } commands_t;
 #endif
 
+typedef struct scripts_data {
+    char script_name[64];
+} scripts_data_t;
+
 typedef struct commands_data {
 
     int counter;
+    int scripts_counter;
     commands_t *commands;
+    scripts_data_t *scripts;
 
 } commands_data_t;
 
-int parse_json_config(const char* json_str, IotConnectClientConfig* iotc_config, commands_data_t *local_commadns, sensors_data_t *local_sensors, char** board);
+int parse_json_config(const char* json_str, IotConnectClientConfig* iotc_config, commands_data_t *local_commadns, sensors_data_t *local_sensors, char** board, char **scripts_path);
 
 
 #endif
