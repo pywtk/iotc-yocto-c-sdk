@@ -1,0 +1,17 @@
+[Unit]
+Description= iotconnect c telemetry service, runs forever
+After=network.target
+Wants=network.target
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/local/iotc/telemetry-demo /usr/local/iotc/config.json
+Restart=always
+RestartSec=30
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=default.target
