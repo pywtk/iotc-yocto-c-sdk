@@ -4,6 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 DEPENDS += " iotc-c-sdk"
+RDEPENDS:${PN} += " iotc-c-telemetry-demo-service"
 PROVIDES = "${PN} ${PN}-dev"
 
 SRC_URI = "file://cmke-src; \
@@ -19,6 +20,7 @@ inherit cmake
 
 PACKAGES = "${PN} ${PN}-dev ${PN}-dbg ${PN}-staticdev"
 
+APP_INSTALL_DIR = "${base_prefix}/usr/bin/local/iotc"
 PRIVATE_DATA_DIR = "${base_prefix}/usr/local/iotc"
 
 FILES:${PN}-dev = "${PRIVATE_DATA_DIR}/* \
@@ -38,15 +40,13 @@ EOF
 
 
 do_install() {
-    install -d ${D}${bindir}
-    install -m 0755 telemetry-demo ${D}${bindir}
+    install -d ${D}${APP_INSTALL_DIR}
+    install -m 0755 telemetry-demo ${D}${APP_INSTALL_DIR}
 
+    install -d ${D}${PRIVATE_DATA_DIR}
     for f in ${WORKDIR}/eg-private-repo-data/*
     do
         if [ -f $f ]; then
-            if [ ! -d ${D}${PRIVATE_DATA_DIR} ]; then
-                install -d ${D}${PRIVATE_DATA_DIR}
-            fi
             install -m 0755 $f ${D}${PRIVATE_DATA_DIR}/
         fi
     done
