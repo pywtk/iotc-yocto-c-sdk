@@ -607,53 +607,47 @@ int main(int argc, char *argv[]) {
 
 
     int reading = 0;
+    int ret = (iotconnect_sdk_init());
 
-    // run a dozen connect/send/disconnect cycles with each cycle being about a minute
-    for (int j = 0; j < 10; j++) {
-        int ret = iotconnect_sdk_init();
-        if (0 != ret) {
-            fprintf(stderr, "IoTConnect exited with error code %d\n", ret);
-            return ret;
-        }
-
-        // send 10 messages
-        for (int i = 0; iotconnect_sdk_is_connected() && i < 10; i++) {
-
-            for (int i = 0; i < local_data.sensors.size; i++){
-    
-
-                switch (local_data.sensors.sensor[i].mode)
-                {
-                case FMODE_ASCII:
-
-                    if (read_sensor_ascii(&local_data.sensors.sensor[i]) != 0){
-                        printf("failed to read data from file in ascii mode\r\n");
-                    }
-                    break;
-                case FMODE_BIN:
-                    
-                    if (read_sensor_raw(&local_data.sensors.sensor[i]) != 0){
-                        printf("failed to read data from file in binary mode\r\n");
-                    }
-
-                    break;
-                case FMODE_END:
-                default:
-                    printf("Unsupported read mode. Skipping\r\n");
-                    break;
-                }
-        
-
-            }
-            publish_telemetry(local_data.sensors);
-            // repeat approximately evey ~5 seconds
-            for (int k = 0; k < 500; k++) {
-                iotconnect_sdk_receive();
-                usleep(10000); // 10ms
-            }
-        }
-        iotconnect_sdk_disconnect();
+    if (ret) {
+        fprintf(stderr, "IoTConnect exited with error code %d\n", ret);
+        return ret;
     }
+        // send 10 messages
+    while(iotconnect_sdk_is_connected()) {
+
+        for (int i = 0; i < local_data.sensors.size; i++){
+
+
+            switch (local_data.sensors.sensor[i].mode)
+            {
+            case FMODE_ASCII:
+
+                if (read_sensor_ascii(&local_data.sensors.sensor[i]) != 0){
+                    printf("failed to read data from file in ascii mode\r\n");
+                }
+                break;
+            case FMODE_BIN:
+
+                if (read_sensor_raw(&local_data.sensors.sensor[i]) != 0){
+                    printf("failed to read data from file in binary mode\r\n");
+                }
+
+                break;
+            case FMODE_END:
+            default:
+                printf("Unsupported read mode. Skipping\r\n");
+                break;
+            }
+        }
+        publish_telemetry(local_data.sensors);
+        // repeat approximately evey ~5 seconds
+        for (int k = 0; k < 500; k++) {
+            iotconnect_sdk_receive();
+            usleep(10000); // 10ms
+        }
+    }
+    iotconnect_sdk_disconnect();
 
     free_iotc_config(config);
 
