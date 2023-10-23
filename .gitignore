@@ -54,3 +54,5 @@ dkms.conf
 # Private data, certificates etc
 *.pem
 *.csr
+*.key
+*.pfx
